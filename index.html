@@ -159,6 +159,8 @@ input[type=text],textarea{font-family:var(--body);font-size:16px;padding:11px 12
 .acts2{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
 .plain{background:transparent;border:0;font-family:var(--body);font-weight:900;font-size:15px;text-decoration:underline;cursor:pointer;color:var(--ink);padding:10px 4px}
 #copied{font-weight:900;color:var(--ok)}
+.mailnote{font-size:14.5px;color:var(--slate)}
+#mail{text-align:center}
 .after{padding:48px 0}
 .after ol{margin:18px 0 0;padding-left:22px;max-width:70ch;display:flex;flex-direction:column;gap:8px}
 footer{background:var(--ink);color:#D9D6CE;padding:30px 0 40px}
@@ -721,7 +723,8 @@ footer p{font-size:15px;max-width:60ch}
     </div>
     <div class="col">
       <div class="field"><label for="out">Your answer, ready to send</label><textarea id="out" readonly></textarea></div>
-      <div class="acts2"><button type="button" class="btn-y" id="copy">Copy my sign-off</button><button type="button" class="plain" id="reset">Start again</button><span id="copied" role="status"></span></div>
+      <div class="acts2"><a class="btn-y" id="mail" href="mailto:george@comparedatagroup.com">Email my sign-off</a><button type="button" class="all" id="copy">Copy my sign-off</button><button type="button" class="plain" id="reset">Start again</button><span id="copied" role="status"></span></div>
+      <p class="mailnote">Email my sign-off opens your email app with your answers filled in, addressed to george@comparedatagroup.com. Press send there. If nothing opens, copy your sign-off and email it to that address.</p>
     </div>
   </div>
 </div></section>
@@ -768,6 +771,10 @@ footer p{font-size:15px;max-width:60ch}
     if(open.length)L.push('','Not answered yet ('+open.length+'): '+open.join(', '));
     if(els.value)L.push('','Anything else: '+els.value);
     out.value=L.join('\n');
+    var subj='Sussex launch ads sign-off'+(who.value?' from '+who.value:'');
+    var body=out.value;
+    if(encodeURIComponent(body).length>1700){body=L.slice(0,2).join('\n')+'\n\n(My full sign-off is long. I have copied it and pasted it below.)\n';}
+    document.getElementById('mail').setAttribute('href','mailto:george@comparedatagroup.com?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body));
   }
   rows.forEach(function(r){
     var c=r.dataset.code;
@@ -785,6 +792,9 @@ footer p{font-size:15px;max-width:60ch}
   who.addEventListener('input',function(){state._who=who.value;save();paint();});
   els.addEventListener('input',function(){state._else=els.value;save();paint();});
   document.getElementById('reset').addEventListener('click',function(){state={};who.value='';els.value='';save();paint();document.getElementById('copied').textContent='';});
+  document.getElementById('mail').addEventListener('click',function(){
+    try{navigator.clipboard.writeText(out.value).catch(function(){});}catch(e){}
+  });
   document.getElementById('copy').addEventListener('click',function(){
     var msg=document.getElementById('copied');
     function fallback(){out.focus();out.select();msg.textContent='Selected. Press copy on your keyboard.';}
