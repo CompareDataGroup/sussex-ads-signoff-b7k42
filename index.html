@@ -723,8 +723,8 @@ footer p{font-size:15px;max-width:60ch}
     </div>
     <div class="col">
       <div class="field"><label for="out">Your answer, ready to send</label><textarea id="out" readonly></textarea></div>
-      <div class="acts2"><a class="btn-y" id="mail" href="mailto:george@comparedatagroup.com">Email my sign-off</a><button type="button" class="all" id="copy">Copy my sign-off</button><button type="button" class="plain" id="reset">Start again</button><span id="copied" role="status"></span></div>
-      <p class="mailnote">Email my sign-off opens your email app with your answers filled in, addressed to george@comparedatagroup.com. Press send there. If nothing opens, copy your sign-off and email it to that address.</p>
+      <div class="acts2"><a class="btn-y" id="mail" href="mailto:george@comparedatagroup.com">Save and send to George</a><button type="button" class="all" id="copy">Copy my sign-off</button><button type="button" class="plain" id="reset">Start again</button><span id="copied" role="status"></span></div>
+      <p class="mailnote">Save and send opens your email app with your answers filled in, addressed to george@comparedatagroup.com. Press send there to finish. If nothing opens, copy your sign-off and email it to that address.</p>
     </div>
   </div>
 </div></section>
@@ -794,6 +794,8 @@ footer p{font-size:15px;max-width:60ch}
   document.getElementById('reset').addEventListener('click',function(){state={};who.value='';els.value='';save();paint();document.getElementById('copied').textContent='';});
   document.getElementById('mail').addEventListener('click',function(){
     try{navigator.clipboard.writeText(out.value).catch(function(){});}catch(e){}
+    save();
+    document.getElementById('copied').textContent='Saved. Your email app should now be open with your answers. Press send there to finish.';
   });
   document.getElementById('copy').addEventListener('click',function(){
     var msg=document.getElementById('copied');
